@@ -45,10 +45,11 @@ public class Renderer {
 		gl.glLoadIdentity();
 		GLU.gluOrtho2D(gl, 0, activity.getWidth(), 0, activity.getHeight());
 
-		renderEnemies(gl, field.getWalkingEnemies(), field.getTower());
+		renderEnemies(gl, field.getWalkingEnemies());
+		renderTower(gl, field.getTower());
 	}
 
-	private void renderEnemies(GL10 gl, ArrayList<Enemy> enemies, ArrayList<Tower> towerList) {
+	private void renderEnemies(GL10 gl, ArrayList<Enemy> enemies) {
 		for(Enemy actualEnemy: enemies){
 			gl.glPushMatrix();
 			gl.glTranslatef(actualEnemy.actualPosition.x, actualEnemy.actualPosition.y, actualEnemy.actualPosition.z);
@@ -64,13 +65,16 @@ public class Renderer {
 			enemy.render(PrimitiveType.Triangles);
 			gl.glPopMatrix();
 		}
+		
+	}
+
+	private void renderTower(GL10 gl, ArrayList<Tower> towerList) {
 		for(Tower actualTower: towerList){
 			gl.glPushMatrix();
 			gl.glTranslatef(actualTower.position.x, actualTower.position.y, actualTower.position.z);
 			tower.render(PrimitiveType.Triangles);
 			gl.glPopMatrix();
 		}
-		
 	}
 	public void dispose(){
 		enemy.dispose();
