@@ -6,7 +6,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLU;
 
-import com.pongo.towerdefense.GameActivity;
+import com.pongo.towerdefense.TowerDefense;
 import com.pongo.towerdefense.model.Enemy;
 import com.pongo.towerdefense.model.GameField;
 import com.pongo.towerdefense.model.Richtung;
@@ -19,7 +19,7 @@ public class Renderer {
 	private Mesh enemy;
 	private Mesh tower;
 
-	public Renderer(GL10 gl, GameActivity activity) {
+	public Renderer(GL10 gl, TowerDefense activity) {
 
 		enemy = new Mesh(gl, 3, false, false, false);
 		enemy.vertex(0, 0, 0);
@@ -36,7 +36,7 @@ public class Renderer {
 
 	}
 
-	public void render(GL10 gl, GameActivity activity, GameField field) {
+	public void render(GL10 gl, TowerDefense activity, GameField field) {
 		//gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glViewport(0, 0, activity.getWidth(), activity.getHeight());
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
