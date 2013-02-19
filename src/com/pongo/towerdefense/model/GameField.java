@@ -12,6 +12,9 @@ public class GameField {
 	private ArrayList<Tower> tower;
 	private float totalTime;
 	private float enemyCounter;
+	public int touchX;
+	public int touchY;
+	public boolean isTouched;
 
 	public GameField(ArrayList<Enemy> enemies) {
 		this.startEnemies = false;
@@ -35,6 +38,10 @@ public class GameField {
 
 	public void startAction(float deltaTime) {
 		totalTime += deltaTime;
+		if(isTouched){
+			tower.add(new Aussichtsturm(new Vector(touchX, touchY, 0)));
+			isTouched = false;
+		}
 		moveEnemies(deltaTime);
 		fireTowers(deltaTime);
 	}

@@ -19,7 +19,7 @@ import com.pongo.towerdefense.model.Vector;
 public class GameLoop implements GameScreen {
 
 	public GameField field;
-	Renderer renderer;
+	public Renderer renderer;
 
 	public GameLoop(GL10 gl, TowerDefense activity) {
 		ArrayList<Vector> route = new ArrayList<Vector>();
