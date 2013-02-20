@@ -9,6 +9,7 @@ import android.opengl.GLU;
 import com.pongo.towerdefense.Input;
 import com.pongo.towerdefense.TouchMode;
 import com.pongo.towerdefense.TowerDefense;
+import com.pongo.towerdefense.input.InputManager;
 import com.pongo.towerdefense.model.Enemy;
 import com.pongo.towerdefense.model.GameField;
 import com.pongo.towerdefense.model.Richtung;
@@ -38,7 +39,7 @@ public class Renderer {
 
 	}
 
-	public void render(GL10 gl, TowerDefense activity, GameField field) {
+	public void render(GL10 gl, TowerDefense activity, GameField field, InputManager inputManager) {
 		//gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glViewport(0, 0, activity.getWidth(), activity.getHeight());
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -50,7 +51,7 @@ public class Renderer {
 		gl.glMatrixMode( GL10.GL_MODELVIEW );
 		gl.glLoadIdentity();
 		
-		GLU.gluLookAt( gl, field.screenX, field.screenY, 1, field.screenX, field.screenY, 0, 0, 1, 0 );
+		GLU.gluLookAt( gl, inputManager.screenX, inputManager.screenY, 1, inputManager.screenX, inputManager.screenY, 0, 0, 1, 0 );
 		
 		
 		renderEnemies(gl, field.getWalkingEnemies());

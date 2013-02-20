@@ -9,7 +9,9 @@ import com.pongo.towerdefense.TouchMode;
 import com.pongo.towerdefense.TowerDefense;
 import com.pongo.towerdefense.gl.GameScreen;
 import com.pongo.towerdefense.gl.Renderer;
+import com.pongo.towerdefense.input.InputManager;
 import com.pongo.towerdefense.model.Aussichtsturm;
+import com.pongo.towerdefense.model.Block;
 import com.pongo.towerdefense.model.Enemy;
 import com.pongo.towerdefense.model.GameField;
 import com.pongo.towerdefense.model.Ninja;
@@ -22,6 +24,7 @@ public class GameLoop implements GameScreen {
 
 	public GameField field;
 	public Renderer renderer;
+	private InputManager inputManager;
 
 	public GameLoop(GL10 gl, TowerDefense activity) {
 		ArrayList<Vector> route = new ArrayList<Vector>();
@@ -42,12 +45,14 @@ public class GameLoop implements GameScreen {
 		for (int i = 0; i < 4; i++) {
 			enemies.add(new Panzer(route, Richtung.Osten));
 		}
-		field = new GameField(enemies, activity.input);
+		field = new GameField(enemies, new ArrayList<Block>());
 		field.addTower(new Aussichtsturm(new Vector(50, 400, 0)));
 		field.addTower(new Tower1(new Vector(1000, 400, 0)));
 
 		field.startEnemies();
+		inputManager = new InputManager(0, 0, 2040, 1000, activity.input, field);
 		renderer = new Renderer(gl, activity);
+		
 	}
 
 	public GameLoop(GL10 gl, TowerDefense activity, GameField field) {
@@ -65,7 +70,7 @@ public class GameLoop implements GameScreen {
 
 	@Override
 	public void render(GL10 gl, TowerDefense activity) {
-		renderer.render(gl, activity, field);
+		renderer.render(gl, activity, field, inputManager);
 
 	}
 
@@ -79,6 +84,12 @@ public class GameLoop implements GameScreen {
 	public void dispose() {
 		renderer.dispose();
 
+	}
+
+	@Override
+	public void input(TowerDefense activity) {
+		inputManager.update(activity);
+		
 	}
 
 }

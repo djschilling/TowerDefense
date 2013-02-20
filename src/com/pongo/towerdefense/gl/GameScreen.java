@@ -6,6 +6,7 @@ import com.pongo.towerdefense.Input;
 import com.pongo.towerdefense.TowerDefense;
 
 public interface GameScreen {
+	public void input(TowerDefense activity);
 	public void update(TowerDefense activity);
 	public void render(GL10 gl, TowerDefense activity);
 	public boolean isDone();

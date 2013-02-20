@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.pongo.towerdefense.gl.GameScreen;
+import com.pongo.towerdefense.input.InputManager;
 import com.pongo.towerdefense.model.GameField;
 import com.pongo.towerdefense.screens.GameLoop;
 
@@ -30,6 +31,7 @@ public class TowerDefense extends Activity implements Renderer{
 	public boolean isTouched;
 	private boolean firstFrame = true;
 	public Input input;
+	public InputManager inputManager;
 	
 
 	@Override
@@ -50,11 +52,12 @@ public class TowerDefense extends Activity implements Renderer{
 
 	public void setup(GL10 gl) {
 		screen = new GameLoop(gl, this);
+		
 
 	}
 
 	public void mainLoopItration(GL10 gl) {
-		
+		screen.input(this);
 		screen.update(this);
 		screen.render(gl, this);
 		frames++;
