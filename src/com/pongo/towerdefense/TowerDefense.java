@@ -30,6 +30,7 @@ public class TowerDefense extends Activity implements Renderer{
 	public boolean isTouched;
 	private boolean firstFrame = true;
 	public Input input;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class TowerDefense extends Activity implements Renderer{
 	}
 
 	public void mainLoopItration(GL10 gl) {
+		
 		screen.update(this);
 		screen.render(gl, this);
 		frames++;

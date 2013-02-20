@@ -17,6 +17,8 @@ public class GameField {
 	private float enemyCounter;
 	public boolean isTouched;
 	private Input input;
+	public int screenX;
+	public int screenY;
 
 	public GameField(ArrayList<Enemy> enemies, Input input) {
 		this.startEnemies = false;
@@ -43,9 +45,16 @@ public class GameField {
 		totalTime += deltaTime;
 
 		if (input.touchMode == TouchMode.EndTip) {
-			tower.add(new Aussichtsturm(new Vector(input.firstTouchX,
-					input.firstTouchY, 0)));
+			tower.add(new Aussichtsturm(new Vector(input.firstTouchX+screenX,
+					input.firstTouchY+screenY, 0)));
 			input.touchMode = TouchMode.No;
+		}
+		if(input.touchMode == TouchMode.Scroll || input.touchMode == TouchMode.EndScroll){
+			screenX += input.prevTouchX - input.touchX;
+			screenY += input.prevTouchY - input.touchY;
+			if(input.touchMode == TouchMode.EndScroll){
+				input.touchMode = TouchMode.No;
+			}
 		}
 		moveEnemies(deltaTime);
 		fireTowers(deltaTime);

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.pongo.towerdefense.Input;
+import com.pongo.towerdefense.TouchMode;
 import com.pongo.towerdefense.TowerDefense;
 import com.pongo.towerdefense.gl.GameScreen;
 import com.pongo.towerdefense.gl.Renderer;
@@ -47,7 +48,6 @@ public class GameLoop implements GameScreen {
 
 		field.startEnemies();
 		renderer = new Renderer(gl, activity);
-
 	}
 
 	public GameLoop(GL10 gl, TowerDefense activity, GameField field) {
@@ -58,6 +58,7 @@ public class GameLoop implements GameScreen {
 
 	@Override
 	public void update(TowerDefense activity) {
+		
 		field.startAction(activity.getDeltaTime());
 
 	}
