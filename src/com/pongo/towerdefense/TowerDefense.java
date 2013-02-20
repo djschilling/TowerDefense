@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -17,7 +18,7 @@ import com.pongo.towerdefense.gl.GameScreen;
 import com.pongo.towerdefense.model.GameField;
 import com.pongo.towerdefense.screens.GameLoop;
 
-public class TowerDefense extends Activity implements Renderer {
+public class TowerDefense extends Activity implements Renderer{
 
 	public GameScreen screen;
 	private int frames = 0;
@@ -26,11 +27,9 @@ public class TowerDefense extends Activity implements Renderer {
 	private int height;
 	private long lastFrameStart;
 	private float deltaTime;
-	public int touchY;
-	public int touchX;
 	public boolean isTouched;
 	private boolean firstFrame = true;
-	private GestureDetector gestureDedector;
+	public Input input;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +41,9 @@ public class TowerDefense extends Activity implements Renderer {
 		glSurface = new GLSurfaceView(this);
 		glSurface.setRenderer(this);
 		setContentView(glSurface);
-		gestureDedector = new GestureDetector(this, new GestureListener(this));
 		lastFrameStart = 0;
-//		glSurface.setOnTouchListener(this);
+		input = new Input();
+		glSurface.setOnTouchListener(input);
 
 	}
 
@@ -107,15 +106,11 @@ public class TowerDefense extends Activity implements Renderer {
 
 	@Override
 	public void onResume() {
+		firstFrame = true;
 		super.onResume();
 		glSurface.onResume();
 	}
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-	  if (gestureDedector.onTouchEvent(event))
-	    return true;
-	  else
-	    return false;
-	}
+	
+	
 
 }

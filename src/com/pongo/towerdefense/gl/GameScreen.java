@@ -2,6 +2,7 @@ package com.pongo.towerdefense.gl;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.pongo.towerdefense.Input;
 import com.pongo.towerdefense.TowerDefense;
 
 public interface GameScreen {

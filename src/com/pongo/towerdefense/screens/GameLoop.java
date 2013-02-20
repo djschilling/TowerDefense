@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.pongo.towerdefense.Input;
 import com.pongo.towerdefense.TowerDefense;
 import com.pongo.towerdefense.gl.GameScreen;
 import com.pongo.towerdefense.gl.Renderer;
@@ -40,7 +41,7 @@ public class GameLoop implements GameScreen {
 		for (int i = 0; i < 4; i++) {
 			enemies.add(new Panzer(route, Richtung.Osten));
 		}
-		field = new GameField(enemies);
+		field = new GameField(enemies, activity.input);
 		field.addTower(new Aussichtsturm(new Vector(50, 400, 0)));
 		field.addTower(new Tower1(new Vector(1000, 400, 0)));
 
