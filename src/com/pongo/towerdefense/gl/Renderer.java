@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLU;
 
 import com.pongo.towerdefense.Input;
+import com.pongo.towerdefense.TouchMode;
 import com.pongo.towerdefense.TowerDefense;
 import com.pongo.towerdefense.model.Enemy;
 import com.pongo.towerdefense.model.GameField;
@@ -20,10 +21,15 @@ public class Renderer {
 	private Mesh enemy;
 	private Mesh tower;
 	private Input input;
+	private int screenX;
+	private int screenY;
+	private int scrollCounter;
+	
 	public Renderer(GL10 gl, TowerDefense activity) {
 		
 		this.input = activity.input;
-
+		screenX = 0;
+		screenY = 0;
 		enemy = new Mesh(gl, 3, false, false, false);
 		enemy.vertex(0, 0, 0);
 		enemy.vertex(50, 0, 0);
@@ -48,6 +54,18 @@ public class Renderer {
 		gl.glLoadIdentity();
 		GLU.gluOrtho2D(gl, 0, activity.getWidth(), 0, activity.getHeight());
 
+		gl.glMatrixMode( GL10.GL_MODELVIEW );
+		gl.glLoadIdentity();
+		if(input.touchMode == TouchMode.Scroll || input.touchMode == TouchMode.EndScroll){
+			screenX += input.prevTouchX - input.touchX;
+			screenY += input.prevTouchY - input.touchY;
+			if(input.touchMode == TouchMode.EndScroll){
+				input.touchMode = TouchMode.No;
+			}
+		}
+		GLU.gluLookAt( gl, screenX, screenY, 1, screenX, screenY, 0, 0, 1, 0 );
+		
+		
 		renderEnemies(gl, field.getWalkingEnemies());
 		renderTower(gl, field.getTower());
 		renderFont(gl);
