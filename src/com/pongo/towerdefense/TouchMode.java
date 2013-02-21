@@ -1,7 +1,7 @@
 package com.pongo.towerdefense;
 
 public enum TouchMode {
-	
-	No, Start, Scroll, EndTip, EndScroll 
+
+	No, Start, EventuallyScroll, Scroll, EndTip, EndScroll
 
 }

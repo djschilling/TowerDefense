@@ -12,11 +12,10 @@ public class Input implements OnTouchListener {
 	public int touchX;
 	public int touchY;
 	public TouchMode touchMode;
-	public int scrollCounter;
-
+	private int genauigkeit = 20;
+	
 	public Input() {
 		touchMode = TouchMode.No;
-		scrollCounter = 0;
 	}
 
 	public void touch(MotionEvent event) {
@@ -25,7 +24,7 @@ public class Input implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-
+		
 		if (touchMode == TouchMode.No) {
 			touchMode = TouchMode.Start;
 			firstTouchX = (int) event.getX();
@@ -34,24 +33,46 @@ public class Input implements OnTouchListener {
 			if (event.getAction() == MotionEvent.ACTION_UP) {
 				touchMode = TouchMode.EndTip;
 			} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-				prevTouchX = firstTouchX;
-				prevTouchY = firstTouchY;
-				touchX = (int) event.getX();
-				touchY = (int) (v.getHeight() - event.getY());
-				scrollCounter++;
-				touchMode = TouchMode.Scroll;
+				float abweichungX = Math.abs(firstTouchX - event.getX());
+				float abweichungY = Math.abs(firstTouchY - event.getY());
+				if (abweichungX > genauigkeit
+						|| abweichungY>genauigkeit) {
+					prevTouchX = firstTouchX;
+					prevTouchY = firstTouchY;
+					touchX = (int) event.getX();
+					touchY = (int) (v.getHeight() - event.getY());
+					touchMode = TouchMode.Scroll;
+				} else {
+					touchMode = TouchMode.EventuallyScroll;
+				}
 			}
-		} else if(touchMode == TouchMode.Scroll){
-			scrollCounter++;
+		} else if(touchMode == TouchMode.EventuallyScroll){
+			if (event.getAction() == MotionEvent.ACTION_UP) {
+				touchMode = TouchMode.EndTip;
+			} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+				float abweichungX = Math.abs(firstTouchX - event.getX());
+				float abweichungY = Math.abs(firstTouchY - event.getY());
+				if ( abweichungX > genauigkeit
+						|| abweichungY >genauigkeit) {
+					prevTouchX = firstTouchX;
+					prevTouchY = firstTouchY;
+					touchX = (int) event.getX();
+					touchY = (int) (v.getHeight() - event.getY());
+					touchMode = TouchMode.Scroll;
+				} else {
+					touchMode = TouchMode.EventuallyScroll;
+				}
+			}
+		}
+			else if (touchMode == TouchMode.Scroll) {
 			prevTouchX = touchX;
 			prevTouchY = touchY;
 			touchX = (int) event.getX();
 			touchY = (int) (v.getHeight() - event.getY());
-			if(event.getAction() == MotionEvent.ACTION_UP){
+			if (event.getAction() == MotionEvent.ACTION_UP) {
 				touchMode = TouchMode.EndScroll;
 			}
-		} 
+		}
 		return true;
 	}
-
 }

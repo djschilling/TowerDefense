@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.pongo.towerdefense.Input;
-import com.pongo.towerdefense.TouchMode;
+import android.view.MotionEvent;
+
 import com.pongo.towerdefense.TowerDefense;
 import com.pongo.towerdefense.gl.GameScreen;
 import com.pongo.towerdefense.gl.Renderer;
@@ -45,19 +45,23 @@ public class GameLoop implements GameScreen {
 		for (int i = 0; i < 4; i++) {
 			enemies.add(new Panzer(route, Richtung.Osten));
 		}
-		field = new GameField(enemies, new ArrayList<Block>());
+		ArrayList<Block> blocks = new ArrayList<Block>();
+		for(int i = 0; i < 10; i++){
+			blocks.add(new Block(new Vector(i*20, 500, 0), 20, 20));
+		}
+		field = new GameField(enemies, blocks, 1000, 1000);
 		field.addTower(new Aussichtsturm(new Vector(50, 400, 0)));
 		field.addTower(new Tower1(new Vector(1000, 400, 0)));
 
 		field.startEnemies();
-		inputManager = new InputManager(0, 0, 2040, 1000, activity.input, field);
-		renderer = new Renderer(gl, activity);
+		inputManager = new InputManager(0, 0, 2040, 1000,field);
+		renderer = new Renderer(gl, activity, field);
 		
 	}
 
 	public GameLoop(GL10 gl, TowerDefense activity, GameField field) {
 		this.field = field;
-		renderer = new Renderer(gl, activity);
+		renderer = new Renderer(gl, activity, field);
 
 	}
 
@@ -86,10 +90,20 @@ public class GameLoop implements GameScreen {
 
 	}
 
+
+
+
 	@Override
-	public void input(TowerDefense activity) {
-		inputManager.update(activity);
-		
+	public boolean inputTip(MotionEvent ev, TowerDefense activity) {
+		return inputManager.tip(ev, activity);
 	}
+
+	@Override
+	public boolean inputScroll(TowerDefense activity, int distanceX,
+			int distanceY) {
+		return inputManager.scroll(activity, distanceX, distanceY);
+	}
+
+
 
 }
