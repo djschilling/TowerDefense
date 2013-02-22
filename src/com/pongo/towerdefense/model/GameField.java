@@ -21,9 +21,9 @@ public class GameField {
 	public ArrayList<Block> blocks;
 	public int width;
 	public int height;
+	public final int BLOCK_SIZE = 10;
 
-	public GameField(ArrayList<Enemy> enemies, ArrayList<Block> blocks,
-			int width, int height) {
+	public GameField(ArrayList<Enemy> enemies, int width, int height) {
 		this.startEnemies = false;
 		this.waitingEnemies = enemies;
 		this.walkingEnemies = new ArrayList<Enemy>();
@@ -32,7 +32,7 @@ public class GameField {
 		this.deadEnemies = new ArrayList<Enemy>();
 		this.totalTime = 0;
 		this.enemyCounter = 0;
-		this.blocks = blocks;
+		this.blocks = new ArrayList<Block>();
 		this.width = width;
 		this.height = height;
 		this.towerToBuild = new ArrayList<Tower>();
@@ -55,6 +55,10 @@ public class GameField {
 
 		moveEnemies(deltaTime);
 		fireTowers(deltaTime);
+	}
+
+	public void addBlocks(int bottom, int top, int left, int right) {
+		blocks.add(new Block(new com.pongo.towerdefense.model.Vector(left, bottom, 0), right-left, top-bottom));
 	}
 
 	private void fireTowers(float deltaTime) {

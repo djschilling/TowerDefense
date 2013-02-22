@@ -7,6 +7,8 @@ public class Block {
 	
 	public Block(Vector position, int width, int height){
 		this.position = position;
+		this.width = width;
+		this.height = height;
 	}
 
 }

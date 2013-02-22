@@ -21,7 +21,7 @@ public class Renderer {
 
 	private Mesh enemy;
 	private Mesh tower;
-	private Mesh block;
+	private ArrayList<Mesh> blocks;
 	private Mesh linie;
 	private GameField field;
 
@@ -35,25 +35,47 @@ public class Renderer {
 		enemy.color(0, 1, 0, 1);
 		enemy.vertex(25, 50, 0);
 
-		block = new Mesh(gl, 4, false, false, false);
-		block.vertex(0, 20, 0);
-		block.vertex(20, 20, 0);
-		block.vertex(20, 0, 0);
-		block.vertex(0, 0, 0);
+		blocks = new ArrayList<Mesh>();
+		for (Block actualBlock : field.blocks) {
+			blocks.add(new Mesh(gl, 4, true, false, false));
+			int size = blocks.size();
+			blocks.get(size - 1).color(0.5f, 0.2f, 0.05f, 1f);
+			blocks.get(size - 1).vertex(actualBlock.position.x,
+					actualBlock.position.y + actualBlock.height, 0);
+			blocks.get(size - 1).color(0.5f, 0.2f, 0.05f, 1f);
+			blocks.get(size - 1).vertex(
+					actualBlock.position.x + actualBlock.width,
+					actualBlock.position.y + actualBlock.height, 0);
+			blocks.get(size - 1).color(0.5f, 0.2f, 0.05f, 1f);
+			blocks.get(size - 1).vertex(
+					actualBlock.position.x + actualBlock.width,
+					actualBlock.position.y, 0);
+			blocks.get(size - 1).color(0.5f, 0.2f, 0.05f, 1f);
+			blocks.get(size - 1).vertex(actualBlock.position.x,
+					actualBlock.position.y, 0);
+		}
 
-		tower = new Mesh(gl, 1, true, false, false);
+		tower = new Mesh(gl, 4, true, false, false);
 		tower.color(1, 0, 0, 1);
 		tower.vertex(0, 0, 0);
+		tower.color(1, 0, 0, 1);
+		tower.vertex(10, 0, 0);
+		tower.color(1, 0, 0, 1);
+		tower.vertex(10, 10, 0);
+		tower.color(1, 0, 0, 1);
+		tower.vertex(0, 10, 0);
+		
+		
 
-//		linie = new Mesh(gl, 2, true, false, false);
-//		linie.color(255, 140, 0, 1);
-//		linie.vertex(25, 25, 0);
-//		linie.color(255, 140, 0, 1);
-//		linie.vertex(700, 700, 0);
-//		linie.color(255, 140, 0, 1);
-//		linie.vertex(400, 400, 0);
-//		linie.color(255, 140, 0, 1);
-//		linie.vertex(150, 450, 0);
+		// linie = new Mesh(gl, 2, true, false, false);
+		// linie.color(255, 140, 0, 1);
+		// linie.vertex(25, 25, 0);
+		// linie.color(255, 140, 0, 1);
+		// linie.vertex(700, 700, 0);
+		// linie.color(255, 140, 0, 1);
+		// linie.vertex(400, 400, 0);
+		// linie.color(255, 140, 0, 1);
+		// linie.vertex(150, 450, 0);
 
 	}
 
@@ -74,11 +96,11 @@ public class Renderer {
 		// GLU.gluLookAt(gl, inputManager.screenX, inputManager.screenY, 1,
 		// inputManager.screenX, inputManager.screenY, 0, 0, 1, 0);
 
+		renderBlocks(gl);
 		renderEnemies(gl, field.getWalkingEnemies());
 		renderTower(gl, field.getTower());
 
-		renderBlocks(gl);
-//		renderLinie(gl);
+		// renderLinie(gl);
 
 	}
 
@@ -89,12 +111,9 @@ public class Renderer {
 	}
 
 	private void renderBlocks(GL10 gl) {
-		for (Block actualBlock : field.blocks) {
+		for (Mesh actualBlock : blocks) {
 			gl.glPushMatrix();
-			gl.glTranslatef(actualBlock.position.x, actualBlock.position.y,
-					actualBlock.position.z);
-
-			block.render(PrimitiveType.TriangleFan);
+			actualBlock.render(PrimitiveType.TriangleFan);
 			gl.glPopMatrix();
 
 		}
@@ -124,12 +143,12 @@ public class Renderer {
 
 	private void renderTower(GL10 gl, Vector<Tower> towerList) {
 
-		gl.glPointSize(30);
+		
 		for (Tower actualTower : towerList) {
 			gl.glPushMatrix();
 			gl.glTranslatef(actualTower.position.x, actualTower.position.y,
 					actualTower.position.z);
-			tower.render(PrimitiveType.Points);
+			tower.render(PrimitiveType.TriangleFan);
 			gl.glPopMatrix();
 		}
 	}
