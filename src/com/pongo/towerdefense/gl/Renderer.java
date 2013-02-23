@@ -9,6 +9,7 @@ import android.opengl.GLU;
 import com.pongo.towerdefense.TowerDefense;
 import com.pongo.towerdefense.input.InputManager;
 import com.pongo.towerdefense.model.Block;
+import com.pongo.towerdefense.model.Bullet;
 import com.pongo.towerdefense.model.Enemy;
 import com.pongo.towerdefense.model.GameField;
 import com.pongo.towerdefense.model.Richtung;
@@ -23,6 +24,7 @@ public class Renderer {
 	private OwnMesh enemy;
 	private OwnMesh tower;
 	private ArrayList<OwnMesh> blocks;
+	private OwnMesh bullet;
 	private Font font;
 	private Text framesPerSecond;
 	private InputManager inputManager;
@@ -37,10 +39,17 @@ public class Renderer {
 		initializeEnemy(gl);
 		initializeBlocks(gl);
 		initializeTower(gl);
+		initializeBullet(gl);
 		initalizeFont(gl);
 
         
         
+	}
+
+	private void initializeBullet(GL10 gl) {
+		bullet = new OwnMesh(gl, 4, false, false);
+		bullet.setVertex(0, 0, 0);
+		
 	}
 
 	public void render(GL10 gl) {
@@ -56,10 +65,12 @@ public class Renderer {
 		renderBlocks(gl);
 		renderEnemies(gl, field.getWalkingEnemies());
 		renderTower(gl, field.getTower());
+		renderBullet(gl, field.bullets);
 
 		renderText(gl, activity.framesPerSecond);
 
 	}
+
 
 	private void initalizeFont(GL10 gl) {
 		font = new Font(gl, activity.getAssets(), "Times New Roman.ttf", 50, FontStyle.Bold);
@@ -114,6 +125,16 @@ public class Renderer {
 		gl.glLoadIdentity();
 	}
 
+	private void renderBullet(GL10 gl, ArrayList<Bullet> bullets) {
+		gl.glPointSize(10);
+		for(Bullet bullet:bullets){
+			gl.glPushMatrix();
+			gl.glTranslatef(bullet.position.x, bullet.position.y, bullet.position.z);
+			this.bullet.render(GL10.GL_POINTS);
+			gl.glPopMatrix();
+		}
+		
+	}
 	private void renderText(GL10 gl, int framesPerSecond) {
 		set2DProjection(gl);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -135,7 +156,6 @@ public class Renderer {
 			actualBlock.render(GL10.GL_TRIANGLE_FAN);
 
 		}
-		// blocks.get(0).render(PrimitiveType.TriangleFan);
 	}
 
 	private void renderEnemies(GL10 gl, ArrayList<Enemy> enemies) {

@@ -13,7 +13,7 @@ public class Enemy implements Comparable<Enemy> {
 	public int speed;
 	public Vector actualPosition;
 	public Richtung richtung;
-	private boolean aendertRichtung;
+	public boolean aendertRichtung;
 	public int width;
 	public int height;
 

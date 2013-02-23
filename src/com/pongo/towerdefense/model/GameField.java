@@ -22,6 +22,8 @@ public class GameField {
 	public int width;
 	public int height;
 	public final int BLOCK_SIZE = 10;
+	public ArrayList<Bullet> bullets;
+	public ArrayList<Bullet> explodingBullets;
 
 	public GameField(ArrayList<Enemy> enemies, int width, int height) {
 		this.startEnemies = false;
@@ -36,6 +38,8 @@ public class GameField {
 		this.width = width;
 		this.height = height;
 		this.towerToBuild = new ArrayList<Tower>();
+		this.bullets = new ArrayList<Bullet>();
+		this.explodingBullets = new ArrayList<Bullet>();
 	}
 
 	public void startEnemies() {
@@ -55,18 +59,43 @@ public class GameField {
 
 		moveEnemies(deltaTime);
 		fireTowers(deltaTime);
+		updateBullets(deltaTime);
+	}
+
+	private void updateBullets(float deltaTime) {
+		
+		if(explodingBullets.size() >= 0){
+			explodingBullets.clear();
+		}
+		ArrayList<Bullet> bulletsToDestroy = new ArrayList<Bullet>();
+		for (Bullet bullet : bullets) {
+			Enemy enemy = bullet.update(deltaTime);
+			if(bullet.isExploded()){
+				bulletsToDestroy.add(bullet);
+				explodingBullets.add(bullet);
+			}
+			
+			if (enemy != null) {
+				walkingEnemies.remove(enemy);
+				deadEnemies.add(enemy);
+			}
+			
+		}
+		for(Bullet bullet: bulletsToDestroy){
+			bullets.remove(bullet);
+		}
+
 	}
 
 	public void addBlocks(int bottom, int top, int left, int right) {
-		blocks.add(new Block(new com.pongo.towerdefense.model.Vector(left, bottom, 0), right-left, top-bottom));
+		blocks.add(new Block(new com.pongo.towerdefense.model.Vector(left, bottom, 0), right - left, top - bottom));
 	}
 
 	private void fireTowers(float deltaTime) {
 		for (Tower actualTower : tower) {
-			Enemy enemy = actualTower.update(walkingEnemies, deltaTime);
-			if (enemy != null) {
-				walkingEnemies.remove(enemy);
-				deadEnemies.add(enemy);
+			Bullet bullet = actualTower.update(walkingEnemies, deltaTime);
+			if(bullet != null && !bullet.noBullet){
+				bullets.add(bullet);
 			}
 		}
 
@@ -90,8 +119,7 @@ public class GameField {
 			}
 		}
 
-		if (startEnemies == true && waitingEnemies.size() > 0
-				&& totalTime > enemyCounter * 3) {
+		if (startEnemies == true && waitingEnemies.size() > 0 && totalTime > enemyCounter * 3) {
 			Enemy enemy = waitingEnemies.remove(0);
 			enemy.update(deltaTime, true);
 			walkingEnemies.add(enemy);
