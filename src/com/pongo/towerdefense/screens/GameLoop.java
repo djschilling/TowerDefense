@@ -16,6 +16,7 @@ import com.pongo.towerdefense.model.GameField;
 import com.pongo.towerdefense.model.Ninja;
 import com.pongo.towerdefense.model.Panzer;
 import com.pongo.towerdefense.model.Richtung;
+import com.pongo.towerdefense.model.Tower;
 import com.pongo.towerdefense.model.Tower1;
 import com.pongo.towerdefense.model.Vector;
 
@@ -104,6 +105,8 @@ public class GameLoop implements GameScreen {
 		field.addBlocks(1350, 1550, 1200, 1700);
 		field.addBlocks(200, 1650, 1800, 2000);
 		field.addBlocks(1650, 2000, 1300, 2000);
+		
+		
 	}
 
 	public GameLoop(GL10 gl, TowerDefense activity, GameField field) {
