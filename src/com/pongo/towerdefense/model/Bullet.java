@@ -6,7 +6,7 @@ public class Bullet {
 	private int speed;
 	private Enemy enemy;
 	private boolean explode;
-	private int strength;
+	public int strength;
 	private Vector startPosition;
 	private Vector startToEnd;
 	private float progress;
@@ -24,6 +24,7 @@ public class Bullet {
 		this.position = new Vector(0, 0, 0);
 		this.strength = strength;
 		this.tower = tower;
+		enemy.incomingBullets.add(this);
 		calculateEnd();
 	}
 

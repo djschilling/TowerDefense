@@ -16,6 +16,8 @@ public class Enemy implements Comparable<Enemy> {
 	public boolean aendertRichtung;
 	public int width;
 	public int height;
+	public ArrayList<Bullet> incomingBullets;
+	public int totalLife;
 
 	public Enemy(ArrayList<Vector> route, int speed, int remainingLife, Richtung richtung, int height, int width) {
 		this.progress = -1;
@@ -24,11 +26,12 @@ public class Enemy implements Comparable<Enemy> {
 		this.lastPosition = new Vector(0, 0, 0);
 		this.route = route;
 		this.speed = speed;
-		this.remainingLife = remainingLife;
+		this.remainingLife = totalLife = remainingLife;
 		this.richtung = richtung;
 		this.aendertRichtung = false;
 		this.height = height;
 		this.width = width;
+		incomingBullets = new ArrayList<Bullet>();
 		
 	}
 

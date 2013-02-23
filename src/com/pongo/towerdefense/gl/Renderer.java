@@ -111,9 +111,9 @@ public class Renderer {
 		enemy.setVertex(0, 0, 0);
 		enemy.setVertex(50, 0, 0);
 		enemy.setVertex(25, 50, 0);
+		enemy.setColor(0, 0.75f, 0, 1);
 		enemy.setColor(1, 0, 0, 1);
-		enemy.setColor(1, 0, 0, 1);
-		enemy.setColor(1, 0, 0, 1);
+		enemy.setColor(0, 0, 0.75f, 1);
 	}
 
 	private void set2DProjection(GL10 gl) {

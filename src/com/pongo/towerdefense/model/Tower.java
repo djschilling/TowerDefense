@@ -28,8 +28,14 @@ public class Tower {
 				currentEnemy = null;
 				for (Enemy enemy : enemies)
 					if (this.position.distanceTo(enemy.actualPosition) <= range) {
-						this.currentEnemy = enemy;
-						break;
+						int damageOnThisEnemy = 0;
+						for (Bullet bullet : enemy.incomingBullets) {
+							damageOnThisEnemy += bullet.strength;
+						}
+						if (damageOnThisEnemy < enemy.totalLife) {
+							this.currentEnemy = enemy;
+							break;
+						}
 					}
 			}
 			if (currentEnemy == null) {

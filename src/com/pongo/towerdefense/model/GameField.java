@@ -119,7 +119,7 @@ public class GameField {
 			}
 		}
 
-		if (startEnemies == true && waitingEnemies.size() > 0 && totalTime > enemyCounter * 3) {
+		if (startEnemies == true && waitingEnemies.size() > 0 && totalTime > enemyCounter * 1.5) {
 			Enemy enemy = waitingEnemies.remove(0);
 			enemy.update(deltaTime, true);
 			walkingEnemies.add(enemy);
