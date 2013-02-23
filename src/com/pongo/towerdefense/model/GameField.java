@@ -13,7 +13,7 @@ public class GameField {
 	private ArrayList<Enemy> lostEnemies;
 	private ArrayList<Enemy> deadEnemies;
 	private boolean startEnemies;
-	private Vector<Tower> tower;
+	private ArrayList<Tower> tower;
 	public ArrayList<Tower> towerToBuild;
 	private float totalTime;
 	private float enemyCounter;
@@ -28,7 +28,7 @@ public class GameField {
 		this.waitingEnemies = enemies;
 		this.walkingEnemies = new ArrayList<Enemy>();
 		this.lostEnemies = new ArrayList<Enemy>();
-		this.tower = new Vector<Tower>();
+		this.tower = new ArrayList<Tower>();
 		this.deadEnemies = new ArrayList<Enemy>();
 		this.totalTime = 0;
 		this.enemyCounter = 0;
@@ -50,7 +50,7 @@ public class GameField {
 		totalTime += deltaTime;
 		if (towerToBuild.size() > 0) {
 			tower.addAll(towerToBuild);
-			towerToBuild = new ArrayList<Tower>();
+			towerToBuild.clear();
 		}
 
 		moveEnemies(deltaTime);
@@ -104,7 +104,7 @@ public class GameField {
 		return walkingEnemies;
 	}
 
-	public Vector<Tower> getTower() {
+	public ArrayList<Tower> getTower() {
 		// TODO Auto-generated method stub
 		return tower;
 	}

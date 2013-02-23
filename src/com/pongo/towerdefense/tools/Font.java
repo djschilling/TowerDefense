@@ -5,18 +5,17 @@ import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.pongo.towerdefense.tools.Mesh.PrimitiveType;
-import com.pongo.towerdefense.tools.Texture.TextureFilter;
-import com.pongo.towerdefense.tools.Texture.TextureWrap;
-
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+
+import com.pongo.towerdefense.tools.Texture.TextureFilter;
+import com.pongo.towerdefense.tools.Texture.TextureWrap;
 
 
 
@@ -233,7 +232,7 @@ public class Font
 	public class Text
 	{
 		private GL10 gl;			
-		private Mesh mesh;
+		private OwnMesh mesh;
 		private String text = "";
 		private int width;
 		private int height;
@@ -291,11 +290,11 @@ public class Font
 		private void rebuild( )
 		{					
 			if( mesh == null )			
-				mesh = new Mesh( gl, 6 * text.length(), false, true, false );
+				mesh = new OwnMesh( gl, 6 * text.length(), false, true);
 			
-			if( mesh.getMaximumVertices() / 6 < text.length() )
+			if( mesh.getAddedVertex() / 6 < text.length() )
 			{				
-				mesh = new Mesh( gl, 6 * text.length(), false, true, false );
+				mesh = new OwnMesh( gl, 6 * text.length(), false, true);
 			}
 						
 			mesh.reset();
@@ -325,18 +324,18 @@ public class Font
 				for( int j = 0; j < line.length(); j++ )
 				{
 					Glyph glyph = getGlyph( line.charAt(j) );
-					mesh.texCoord( glyph.u, glyph.v );
-					mesh.vertex( posX + x, posY + y, 0 );
-					mesh.texCoord( glyph.u + glyph.uWidth, glyph.v );
-					mesh.vertex( posX + x + glyph.width, posY + y, 0 );
-					mesh.texCoord( glyph.u + glyph.uWidth, glyph.v + glyph.vHeight );
-					mesh.vertex( posX + x + glyph.width, posY + y - lineHeight, 0 );
-					mesh.texCoord( glyph.u + glyph.uWidth, glyph.v + glyph.vHeight );
-					mesh.vertex( posX + x + glyph.width, posY + y - lineHeight, 0 );
-					mesh.texCoord( glyph.u, glyph.v + glyph.vHeight );
-					mesh.vertex( posX + x, posY + y - lineHeight, 0 );
-					mesh.texCoord( glyph.u, glyph.v );
-					mesh.vertex( posX + x, y, 0 );
+					mesh.setVertex( posX + x, posY + y, 0 );
+					mesh.setVertex( posX + x + glyph.width, posY + y, 0 );
+					mesh.setVertex( posX + x + glyph.width, posY + y - lineHeight, 0 );
+					mesh.setVertex( posX + x + glyph.width, posY + y - lineHeight, 0 );
+					mesh.setVertex( posX + x, posY + y - lineHeight, 0 );
+					mesh.setVertex( posX + x, y, 0 );
+					mesh.setTexture( glyph.u, glyph.v );
+					mesh.setTexture( glyph.u + glyph.uWidth, glyph.v );
+					mesh.setTexture( glyph.u + glyph.uWidth, glyph.v + glyph.vHeight );
+					mesh.setTexture( glyph.u + glyph.uWidth, glyph.v + glyph.vHeight );
+					mesh.setTexture( glyph.u, glyph.v + glyph.vHeight );
+					mesh.setTexture( glyph.u, glyph.v );
 					x += glyph.advance;
 				}
 			}
@@ -348,7 +347,7 @@ public class Font
 				return;
 						
 			texture.bind();
-			mesh.render(PrimitiveType.Triangles);
+			mesh.render(GL10.GL_TRIANGLES);
 		}		
 		
 		public void dispose( )

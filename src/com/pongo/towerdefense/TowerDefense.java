@@ -1,5 +1,7 @@
 package com.pongo.towerdefense;
 
+import java.util.ArrayList;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -17,7 +19,7 @@ import com.pongo.towerdefense.input.GestureListener;
 import com.pongo.towerdefense.input.InputManager;
 import com.pongo.towerdefense.screens.GameLoop;
 
-public class TowerDefense extends Activity implements Renderer{
+public class TowerDefense extends Activity implements Renderer {
 
 	public GameScreen screen;
 	private int frames = 0;
@@ -32,7 +34,8 @@ public class TowerDefense extends Activity implements Renderer{
 	public InputManager inputManager;
 	private GestureDetector gestureDedector;
 	private GestureListener gestureListener;
-	
+	private float time = 0;
+	public int framesPerSecond = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +51,8 @@ public class TowerDefense extends Activity implements Renderer{
 		input = new Input();
 		gestureListener = new GestureListener(this, 0, 0);
 		gestureDedector = new GestureDetector(this, gestureListener);
-		
-		//glSurface.setOnTouchListener(input);
+
+		// glSurface.setOnTouchListener(input);
 
 	}
 
@@ -60,12 +63,20 @@ public class TowerDefense extends Activity implements Renderer{
 	}
 
 	public void mainLoopItration(GL10 gl) {
-		//screen.input(this);
+		// screen.input(this);
 		screen.update(this);
 		screen.render(gl, this);
+		
 		frames++;
+		time += deltaTime;
+		if (time > 1) {
+			framesPerSecond = frames;
+			frames = 0;
+			time = 0;
+		}
 
 	}
+
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		long currentFrameStart = System.nanoTime();
@@ -118,14 +129,13 @@ public class TowerDefense extends Activity implements Renderer{
 		super.onResume();
 		glSurface.onResume();
 	}
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-	  if (gestureDedector.onTouchEvent(event))
-	    return true;
-	  else
-	    return false;
+		if (gestureDedector.onTouchEvent(event))
+			return true;
+		else
+			return false;
 	}
-	
-	
 
 }

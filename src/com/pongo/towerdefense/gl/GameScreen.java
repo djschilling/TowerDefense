@@ -4,7 +4,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.view.MotionEvent;
 
-import com.pongo.towerdefense.Input;
 import com.pongo.towerdefense.TowerDefense;
 
 public interface GameScreen {

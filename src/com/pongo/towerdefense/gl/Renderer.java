@@ -1,7 +1,6 @@
 package com.pongo.towerdefense.gl;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -14,118 +13,136 @@ import com.pongo.towerdefense.model.Enemy;
 import com.pongo.towerdefense.model.GameField;
 import com.pongo.towerdefense.model.Richtung;
 import com.pongo.towerdefense.model.Tower;
-import com.pongo.towerdefense.tools.Mesh;
-import com.pongo.towerdefense.tools.Mesh.PrimitiveType;
+import com.pongo.towerdefense.tools.Font;
+import com.pongo.towerdefense.tools.Font.FontStyle;
+import com.pongo.towerdefense.tools.Font.Text;
+import com.pongo.towerdefense.tools.OwnMesh;
 
 public class Renderer {
 
-	private Mesh enemy;
-	private Mesh tower;
-	private ArrayList<Mesh> blocks;
-	private Mesh linie;
+	private OwnMesh enemy;
+	private OwnMesh tower;
+	private ArrayList<OwnMesh> blocks;
+	private Font font;
+	private Text framesPerSecond;
+	private InputManager inputManager;
+	private TowerDefense activity;
 	private GameField field;
 
-	public Renderer(GL10 gl, TowerDefense activity, GameField field) {
+	public Renderer(GL10 gl, TowerDefense activity, GameField field, InputManager manager) {
+		this.inputManager = manager;
+		this.activity = activity;
 		this.field = field;
-		enemy = new Mesh(gl, 3, true, false, false);
-		enemy.color(0, 1, 0, 1);
-		enemy.vertex(0, 0, 0);
-		enemy.color(0, 1, 0, 1);
-		enemy.vertex(50, 0, 0);
-		enemy.color(0, 1, 0, 1);
-		enemy.vertex(25, 50, 0);
 
-		blocks = new ArrayList<Mesh>();
-		for (Block actualBlock : field.blocks) {
-			blocks.add(new Mesh(gl, 4, true, false, false));
-			int size = blocks.size();
-			blocks.get(size - 1).color(0.5f, 0.2f, 0.05f, 1f);
-			blocks.get(size - 1).vertex(actualBlock.position.x,
-					actualBlock.position.y + actualBlock.height, 0);
-			blocks.get(size - 1).color(0.5f, 0.2f, 0.05f, 1f);
-			blocks.get(size - 1).vertex(
-					actualBlock.position.x + actualBlock.width,
-					actualBlock.position.y + actualBlock.height, 0);
-			blocks.get(size - 1).color(0.5f, 0.2f, 0.05f, 1f);
-			blocks.get(size - 1).vertex(
-					actualBlock.position.x + actualBlock.width,
-					actualBlock.position.y, 0);
-			blocks.get(size - 1).color(0.5f, 0.2f, 0.05f, 1f);
-			blocks.get(size - 1).vertex(actualBlock.position.x,
-					actualBlock.position.y, 0);
-		}
+		initializeEnemy(gl);
+		initializeBlocks(gl);
+		initializeTower(gl);
+		initalizeFont(gl);
 
-		tower = new Mesh(gl, 4, true, false, false);
-		tower.color(1, 0, 0, 1);
-		tower.vertex(0, 0, 0);
-		tower.color(1, 0, 0, 1);
-		tower.vertex(10, 0, 0);
-		tower.color(1, 0, 0, 1);
-		tower.vertex(10, 10, 0);
-		tower.color(1, 0, 0, 1);
-		tower.vertex(0, 10, 0);
-		
-		
-
-		// linie = new Mesh(gl, 2, true, false, false);
-		// linie.color(255, 140, 0, 1);
-		// linie.vertex(25, 25, 0);
-		// linie.color(255, 140, 0, 1);
-		// linie.vertex(700, 700, 0);
-		// linie.color(255, 140, 0, 1);
-		// linie.vertex(400, 400, 0);
-		// linie.color(255, 140, 0, 1);
-		// linie.vertex(150, 450, 0);
-
+        
+        
 	}
 
-	public void render(GL10 gl, TowerDefense activity, GameField field,
-			InputManager inputManager) {
+	public void render(GL10 gl) {
+
 		gl.glViewport(0, 0, activity.getWidth(), activity.getHeight());
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
 
-		gl.glMatrixMode(GL10.GL_PROJECTION);
-		gl.glLoadIdentity();
-		GLU.gluOrtho2D(gl, inputManager.screenX, inputManager.screenX
-				+ activity.getWidth(), inputManager.screenY,
-				inputManager.screenY + activity.getHeight());
+		set2DProjection(gl);
 
-		// gl.glMatrixMode(GL10.GL_MODELVIEW);
-		// gl.glLoadIdentity();
-		//
-		// GLU.gluLookAt(gl, inputManager.screenX, inputManager.screenY, 1,
-		// inputManager.screenX, inputManager.screenY, 0, 0, 1, 0);
-
+		GLU.gluLookAt(gl, inputManager.screenX, inputManager.screenY, 1, inputManager.screenX, inputManager.screenY, 0, 0, 1, 0);
+         
 		renderBlocks(gl);
 		renderEnemies(gl, field.getWalkingEnemies());
 		renderTower(gl, field.getTower());
 
-		// renderLinie(gl);
+		renderText(gl, activity.framesPerSecond);
 
 	}
 
-	private void renderLinie(GL10 gl) {
-		gl.glLineWidth(10);
-		linie.render(PrimitiveType.LineStrip);
+	private void initalizeFont(GL10 gl) {
+		font = new Font(gl, activity.getAssets(), "Times New Roman.ttf", 50, FontStyle.Bold);
+		framesPerSecond = font.newText(gl);
+	}
+
+	private void initializeTower(GL10 gl) {
+		tower = new OwnMesh(gl, 4, true, false);
+		tower.setVertex(0, 0, 0);
+		tower.setVertex(30, 0, 0);
+		tower.setVertex(30, 30, 0);
+		tower.setColor(1, 0, 0, 1);
+		tower.setVertex(0, 30, 0);
+		tower.setColor(1, 0, 0, 1);
+		tower.setColor(1, 0, 0, 1);
+		tower.setColor(1, 0, 0, 1);
+	}
+
+	private void initializeBlocks(GL10 gl) {
+		blocks = new ArrayList<OwnMesh>();
+		for (Block actualBlock : field.blocks) {
+			blocks.add(new OwnMesh(gl, 4, true, false));
+			int size = blocks.size();
+			blocks.get(size - 1).setVertex(actualBlock.position.x, actualBlock.position.y + actualBlock.height, 0);
+			blocks.get(size - 1).setVertex(actualBlock.position.x + actualBlock.width, actualBlock.position.y + actualBlock.height, 0);
+			blocks.get(size - 1).setVertex(actualBlock.position.x + actualBlock.width, actualBlock.position.y, 0);
+			blocks.get(size - 1).setVertex(actualBlock.position.x, actualBlock.position.y, 0);
+			blocks.get(size - 1).setColor(0.5f, 0.2f, 0.05f, 1f);
+			blocks.get(size - 1).setColor(0.5f, 0.2f, 0.05f, 1f);
+			blocks.get(size - 1).setColor(0.5f, 0.2f, 0.05f, 1f);
+			blocks.get(size - 1).setColor(0.5f, 0.2f, 0.05f, 1f);
+		}
+	}
+
+	private void initializeEnemy(GL10 gl) {
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		enemy = new OwnMesh(gl, 3, true, false);
+		enemy.setVertex(0, 0, 0);
+		enemy.setVertex(50, 0, 0);
+		enemy.setVertex(25, 50, 0);
+		enemy.setColor(1, 0, 0, 1);
+		enemy.setColor(1, 0, 0, 1);
+		enemy.setColor(1, 0, 0, 1);
+	}
+
+	private void set2DProjection(GL10 gl) {
+		gl.glMatrixMode(GL10.GL_PROJECTION);
+		gl.glLoadIdentity();
+		GLU.gluOrtho2D(gl, 0, activity.getWidth(), 0, +activity.getHeight());
+
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+	}
+
+	private void renderText(GL10 gl, int framesPerSecond) {
+		set2DProjection(gl);
+		gl.glEnable(GL10.GL_TEXTURE_2D);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glPushMatrix();
+		gl.glTranslatef(activity.getWidth() - 100, activity.getHeight() - 30, 0);
+
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		this.framesPerSecond.setText(String.valueOf(framesPerSecond));
+		this.framesPerSecond.render();
+		gl.glPopMatrix();
+		gl.glDisable(GL10.GL_BLEND);
+		gl.glDisable(GL10.GL_TEXTURE_2D);
 
 	}
 
 	private void renderBlocks(GL10 gl) {
-		for (Mesh actualBlock : blocks) {
-			gl.glPushMatrix();
-			actualBlock.render(PrimitiveType.TriangleFan);
-			gl.glPopMatrix();
+		for (OwnMesh actualBlock : blocks) {
+			actualBlock.render(GL10.GL_TRIANGLE_FAN);
 
 		}
-
+		// blocks.get(0).render(PrimitiveType.TriangleFan);
 	}
 
 	private void renderEnemies(GL10 gl, ArrayList<Enemy> enemies) {
 		for (Enemy actualEnemy : enemies) {
 			gl.glPushMatrix();
-			gl.glTranslatef(actualEnemy.actualPosition.x,
-					actualEnemy.actualPosition.y, actualEnemy.actualPosition.z);
 
+			gl.glTranslatef(actualEnemy.actualPosition.x, actualEnemy.actualPosition.y, actualEnemy.actualPosition.z);
 			if (actualEnemy.richtung == Richtung.Osten) {
 				gl.glRotatef(-90, 0, 0, 1);
 			} else if (actualEnemy.richtung == Richtung.Sueden) {
@@ -135,20 +152,18 @@ public class Renderer {
 
 				gl.glRotatef(90, 0, 0, 1);
 			}
-			enemy.render(PrimitiveType.Triangles);
+			enemy.render(GL10.GL_TRIANGLES);
 			gl.glPopMatrix();
 		}
 
 	}
 
-	private void renderTower(GL10 gl, Vector<Tower> towerList) {
+	private void renderTower(GL10 gl, ArrayList<Tower> towerList) {
 
-		
 		for (Tower actualTower : towerList) {
 			gl.glPushMatrix();
-			gl.glTranslatef(actualTower.position.x, actualTower.position.y,
-					actualTower.position.z);
-			tower.render(PrimitiveType.TriangleFan);
+			gl.glTranslatef(actualTower.position.x, actualTower.position.y, actualTower.position.z);
+			tower.render(GL10.GL_TRIANGLE_FAN);
 			gl.glPopMatrix();
 		}
 	}
@@ -156,5 +171,9 @@ public class Renderer {
 	public void dispose() {
 		enemy.dispose();
 		tower.dispose();
+		for (OwnMesh currenBlock : blocks) {
+			currenBlock.dispose();
+		}
+		font.dispose();
 	}
 }

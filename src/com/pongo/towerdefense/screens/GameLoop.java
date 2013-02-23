@@ -29,9 +29,9 @@ public class GameLoop implements GameScreen {
 		initalizeField2();
 
 		field.startEnemies();
-		inputManager = new InputManager(0, 0, field.width, field.height,field);
-		renderer = new Renderer(gl, activity, field);
-		
+		inputManager = new InputManager(0, 0, field.width, field.height, field);
+		renderer = new Renderer(gl, activity, field, inputManager);
+
 	}
 
 	private void initalizeField() {
@@ -53,13 +53,14 @@ public class GameLoop implements GameScreen {
 		for (int i = 0; i < 4; i++) {
 			enemies.add(new Panzer(route, Richtung.Osten));
 		}
-		
+
 		field = new GameField(enemies, 2000, 1200);
 		field.addBlocks(0, 20, 0, 20);
 		field.addBlocks(30, 100, 30, 100);
 		field.addTower(new Aussichtsturm(new Vector(50, 400, 0)));
 		field.addTower(new Tower1(new Vector(1000, 400, 0)));
 	}
+
 	private void initalizeField2() {
 		ArrayList<Vector> route = new ArrayList<Vector>();
 		route.add(new Vector(0, 650, 0));
@@ -79,13 +80,12 @@ public class GameLoop implements GameScreen {
 		route.add(new Vector(1750, 1600, 0));
 		route.add(new Vector(1250, 1600, 0));
 		route.add(new Vector(1250, 2000, 0));
-		
 
 		ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 		for (int i = 0; i < 50; i++) {
 			enemies.add(new Ninja(route, Richtung.Osten));
 		}
-		
+
 		field = new GameField(enemies, 2000, 2000);
 		field.addBlocks(0, 600, 0, 200);
 		field.addBlocks(0, 200, 200, 2000);
@@ -104,26 +104,24 @@ public class GameLoop implements GameScreen {
 		field.addBlocks(1350, 1550, 1200, 1700);
 		field.addBlocks(200, 1650, 1800, 2000);
 		field.addBlocks(1650, 2000, 1300, 2000);
-//		field.addTower(new Aussichtsturm(new Vector(50, 400, 0)));
-//		field.addTower(new Tower1(new Vector(1000, 400, 0)));
 	}
 
 	public GameLoop(GL10 gl, TowerDefense activity, GameField field) {
 		this.field = field;
-		renderer = new Renderer(gl, activity, field);
+		renderer = new Renderer(gl, activity, field, inputManager);
 
 	}
 
 	@Override
 	public void update(TowerDefense activity) {
-		
+
 		field.startAction(activity.getDeltaTime());
 
 	}
 
 	@Override
 	public void render(GL10 gl, TowerDefense activity) {
-		renderer.render(gl, activity, field, inputManager);
+		renderer.render(gl);
 
 	}
 
@@ -139,9 +137,6 @@ public class GameLoop implements GameScreen {
 
 	}
 
-
-
-
 	@Override
 	public boolean inputTip(MotionEvent ev, TowerDefense activity) {
 		return inputManager.tip(ev, activity);
@@ -152,7 +147,5 @@ public class GameLoop implements GameScreen {
 			int distanceY) {
 		return inputManager.scroll(activity, distanceX, distanceY);
 	}
-
-
 
 }
