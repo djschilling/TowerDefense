@@ -2,6 +2,8 @@ package com.pongo.towerdefense.model;
 
 import java.util.ArrayList;
 
+import com.pongo.towerdefense.tools.Vector;
+
 public class Panzer extends Enemy {
 	public static final int SPEED = 50;
 	public static final int LIFE = 400;

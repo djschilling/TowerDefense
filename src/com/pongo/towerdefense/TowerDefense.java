@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.pongo.towerdefense.gl.GameScreen;
 import com.pongo.towerdefense.input.GestureListener;
 import com.pongo.towerdefense.input.InputManager;
 import com.pongo.towerdefense.screens.GameLoop;

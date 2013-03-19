@@ -2,14 +2,16 @@ package com.pongo.towerdefense.model;
 
 import java.util.ArrayList;
 
+import com.pongo.towerdefense.tools.Vector;
+
 public class Tower {
 
 	private int range;
 	private int damage;
 	public Enemy currentEnemy;
 	public Vector position;
-	private float reloadTime;
-	private float waitedTime;
+	public float reloadTime;
+	public float waitedTime;
 
 	public Tower(Vector position, int range, int damage, float reloadTime) {
 		this.position = position;
@@ -21,10 +23,9 @@ public class Tower {
 
 	public Bullet update(ArrayList<Enemy> enemies, float deltaTime) {
 		waitedTime += deltaTime;
-		if (waitedTime > reloadTime) {
-			waitedTime = waitedTime - reloadTime;
+		if(waitedTime >= reloadTime){
 
-			if (currentEnemy == null || this.position.distanceTo(currentEnemy.actualPosition) > range || currentEnemy.remainingLife <= 0) {
+			if (currentEnemy == null || this.position.distanceTo(currentEnemy.actualPosition) > range || currentEnemy.remainingLife <= 0 || !currentEnemy.onField) {
 				currentEnemy = null;
 				for (Enemy enemy : enemies)
 					if (this.position.distanceTo(enemy.actualPosition) <= range) {
@@ -41,6 +42,7 @@ public class Tower {
 			if (currentEnemy == null) {
 				return null;
 			} else {
+				waitedTime = 0;
 				return new Bullet(new Vector(position.x, position.y, position.z), 300, currentEnemy, this.damage, this);
 			}
 		}

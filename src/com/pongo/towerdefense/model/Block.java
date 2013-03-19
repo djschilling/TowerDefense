@@ -1,5 +1,7 @@
 package com.pongo.towerdefense.model;
 
+import com.pongo.towerdefense.tools.Vector;
+
 public class Block {
 	public Vector position;
 	public int width;

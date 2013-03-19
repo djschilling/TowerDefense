@@ -1,10 +1,8 @@
 package com.pongo.towerdefense.model;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
-import com.pongo.towerdefense.Input;
-import com.pongo.towerdefense.TouchMode;
+import com.pongo.towerdefense.tools.Vector;
 
 public class GameField {
 
@@ -21,9 +19,9 @@ public class GameField {
 	public ArrayList<Block> blocks;
 	public int width;
 	public int height;
-	public final int BLOCK_SIZE = 10;
 	public ArrayList<Bullet> bullets;
 	public ArrayList<Bullet> explodingBullets;
+	public ArrayList<BuildingGround> buildingGrounds;
 
 	public GameField(ArrayList<Enemy> enemies, int width, int height) {
 		this.startEnemies = false;
@@ -40,6 +38,7 @@ public class GameField {
 		this.towerToBuild = new ArrayList<Tower>();
 		this.bullets = new ArrayList<Bullet>();
 		this.explodingBullets = new ArrayList<Bullet>();
+		this.buildingGrounds = new ArrayList<BuildingGround>();
 	}
 
 	public void startEnemies() {
@@ -63,38 +62,38 @@ public class GameField {
 	}
 
 	private void updateBullets(float deltaTime) {
-		
-		if(explodingBullets.size() >= 0){
+
+		if (explodingBullets.size() >= 0) {
 			explodingBullets.clear();
 		}
 		ArrayList<Bullet> bulletsToDestroy = new ArrayList<Bullet>();
 		for (Bullet bullet : bullets) {
 			Enemy enemy = bullet.update(deltaTime);
-			if(bullet.isExploded()){
+			if (bullet.isExploded()) {
 				bulletsToDestroy.add(bullet);
 				explodingBullets.add(bullet);
 			}
-			
+
 			if (enemy != null) {
 				walkingEnemies.remove(enemy);
 				deadEnemies.add(enemy);
 			}
-			
+
 		}
-		for(Bullet bullet: bulletsToDestroy){
+		for (Bullet bullet : bulletsToDestroy) {
 			bullets.remove(bullet);
 		}
 
 	}
 
 	public void addBlocks(int bottom, int top, int left, int right) {
-		blocks.add(new Block(new com.pongo.towerdefense.model.Vector(left, bottom, 0), right - left, top - bottom));
+		blocks.add(new Block(new com.pongo.towerdefense.tools.Vector(left, bottom, 0), right - left, top - bottom));
 	}
 
 	private void fireTowers(float deltaTime) {
 		for (Tower actualTower : tower) {
 			Bullet bullet = actualTower.update(walkingEnemies, deltaTime);
-			if(bullet != null && !bullet.noBullet){
+			if (bullet != null && !bullet.noBullet) {
 				bullets.add(bullet);
 			}
 		}
@@ -135,5 +134,22 @@ public class GameField {
 	public ArrayList<Tower> getTower() {
 		// TODO Auto-generated method stub
 		return tower;
+	}
+
+	public void addBlock(Block block) {
+		blocks.add(block);
+	}
+
+	public void addBuildingGround(BuildingGround buildingGround) {
+		buildingGrounds.add(buildingGround);
+	}
+
+	public BuildingGround isOnBuildingGround(Vector input) {
+		for (BuildingGround currentBuildingGround : buildingGrounds) {
+			if (Vector.isIn(input, currentBuildingGround.position.x, currentBuildingGround.position.y, currentBuildingGround.position.x + currentBuildingGround.WIDTH, currentBuildingGround.position.y + currentBuildingGround.HEIGHT)) {
+				return currentBuildingGround;
+			}
+		}
+		return null;
 	}
 }

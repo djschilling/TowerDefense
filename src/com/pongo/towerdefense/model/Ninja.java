@@ -2,6 +2,8 @@ package com.pongo.towerdefense.model;
 
 import java.util.ArrayList;
 
+import com.pongo.towerdefense.tools.Vector;
+
 public class Ninja extends Enemy {
 	public static final int SPEED = 200;
 	public static final int LIFE = 100;

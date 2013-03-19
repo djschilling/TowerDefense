@@ -2,6 +2,8 @@ package com.pongo.towerdefense.model;
 
 import java.util.ArrayList;
 
+import com.pongo.towerdefense.tools.Vector;
+
 public class Enemy implements Comparable<Enemy> {
 
 	public int remainingLife;

@@ -1,5 +1,7 @@
 package com.pongo.towerdefense.model;
 
+import com.pongo.towerdefense.tools.Vector;
+
 public class Tower1 extends Tower{
 
 	private static final int RANGE = 100;

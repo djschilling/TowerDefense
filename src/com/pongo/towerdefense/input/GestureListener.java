@@ -3,8 +3,8 @@ package com.pongo.towerdefense.input;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import com.pongo.towerdefense.GameScreen;
 import com.pongo.towerdefense.TowerDefense;
-import com.pongo.towerdefense.gl.GameScreen;
 
 public class GestureListener extends GestureDetector.SimpleOnGestureListener {
 	private TowerDefense towerDefense;

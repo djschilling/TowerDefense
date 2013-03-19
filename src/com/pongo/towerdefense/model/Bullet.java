@@ -1,5 +1,7 @@
 package com.pongo.towerdefense.model;
 
+import com.pongo.towerdefense.tools.Vector;
+
 public class Bullet {
 	public Vector position;
 	private Vector endPosition;
@@ -34,6 +36,7 @@ public class Bullet {
 		saveEnemyData();
 		if(enemy.update(timeToMove, true)){
 			noBullet = true;
+			tower.waitedTime += tower.reloadTime;
 		}
 		endPosition = new Vector(enemy.actualPosition.x, enemy.actualPosition.y, enemy.actualPosition.z);
 		writeBackEnemyData();

@@ -6,11 +6,12 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.view.MotionEvent;
 
+import com.pongo.towerdefense.GameScreen;
 import com.pongo.towerdefense.TowerDefense;
-import com.pongo.towerdefense.gl.GameScreen;
 import com.pongo.towerdefense.gl.Renderer;
 import com.pongo.towerdefense.input.InputManager;
 import com.pongo.towerdefense.model.Aussichtsturm;
+import com.pongo.towerdefense.model.BuildingGround;
 import com.pongo.towerdefense.model.Enemy;
 import com.pongo.towerdefense.model.GameField;
 import com.pongo.towerdefense.model.Ninja;
@@ -18,7 +19,7 @@ import com.pongo.towerdefense.model.Panzer;
 import com.pongo.towerdefense.model.Richtung;
 import com.pongo.towerdefense.model.Tower;
 import com.pongo.towerdefense.model.Tower1;
-import com.pongo.towerdefense.model.Vector;
+import com.pongo.towerdefense.tools.Vector;
 
 public class GameLoop implements GameScreen {
 
@@ -27,11 +28,12 @@ public class GameLoop implements GameScreen {
 	private InputManager inputManager;
 
 	public GameLoop(GL10 gl, TowerDefense activity) {
-		initalizeField2();
+		inizialize3();
 
 		field.startEnemies();
 		inputManager = new InputManager(0, 0, field.width, field.height, field);
 		renderer = new Renderer(gl, activity, field, inputManager);
+		inputManager.setRenderer(renderer);
 
 	}
 
@@ -108,11 +110,39 @@ public class GameLoop implements GameScreen {
 		
 		
 	}
+	private void inizialize3(){
+	ArrayList<Vector> route = new ArrayList<Vector>();
+	route.add(new Vector(0, 50, 0));
+	route.add(new Vector(150, 100, 0));
+	route.add(new Vector(150, 550, 0));
+	route.add(new Vector(1450, 550, 0));
+	route.add(new Vector(1450, 150, 0));
+	route.add(new Vector(850, 150, 0));
+	route.add(new Vector(850, 0, 0));
 
+	ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+	for (int i = 0; i < 50; i++) {
+		enemies.add(new Ninja(route, Richtung.Osten));
+	}
+
+	field = new GameField(enemies, 1900, 1000);
+	field.addBlocks(600, 1000, 100, 1500);
+	field.addBlocks(100, 1000, 0, 100);
+	field.addBlocks(0, 1000, 1500, 1900);
+	field.addBlocks(0, 100, 900, 1500);
+	field.addBlocks(200, 500, 200, 1400);
+	field.addBlocks(0, 200, 200, 800);
+	
+	field.addBuildingGround(new BuildingGround(new Vector(200, 400, 0)));
+	field.addBuildingGround(new BuildingGround(new Vector(500, 400, 0)));
+	field.addBuildingGround(new BuildingGround(new Vector(700, 400, 0)));
+	
+}
+
+	
 	public GameLoop(GL10 gl, TowerDefense activity, GameField field) {
 		this.field = field;
 		renderer = new Renderer(gl, activity, field, inputManager);
-
 	}
 
 	@Override
